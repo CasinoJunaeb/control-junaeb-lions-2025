@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Control Junaeb 2025</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    #reader {
+      width: 300px;
+      margin: auto;
+    }
+    .status {
+      margin-top: 20px;
+      font-size: 1.2em;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .warning {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <h1>Control Junaeb 2025</h1>
+  <div id="reader"></div>
+  <div id="status" class="status"></div>
+
+  <script>
+    const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdeu9bS4d8IL7YdK1dZhZZQOjHF9QgYoPJU1Pj2uGJtKms7tQ/formResponse";
+
+    function showStatus(message, type) {
+      const statusDiv = document.getElementById("status");
+      statusDiv.textContent = message;
+      statusDiv.className = `status $<class 'type'>`;
+    }
+
+    function registerAttendance(data) {
+      const now = new Date();
+      const fecha = now.toLocaleDateString("es-CL");
+      const hora = now.toLocaleTimeString("es-CL");
+
+      const match = data.match(/ID:(\d+)\|Nombre:(.*?)\|Curso:(.*)/);
+      if (!match) {
+        showStatus("QR no válido.", "error");
+        return;
+      }
+
+      const [_, id, nombre, curso] = match;
+
+      const formData = new FormData();
+      formData.append("entry.1823784254", fecha);
+      formData.append("entry.232116003", hora);
+      formData.append("entry.1031051305", id);
+      formData.append("entry.1258643960", nombre);
+      formData.append("entry.1843517454", curso);
+
+      fetch(formURL, {
+        method: "POST",
+        mode: "no-cors",
+        body: formData
+      }).then(() => {
+        showStatus("✅ Pase registrado correctamente", "success");
+      }).catch((err) => {
+        showStatus("❌ No se pudo registrar. Intente nuevamente.", "error");
+      });
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+    const config = { fps: 10, qrbox: 250 };
+
+    html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
+      html5QrCode.stop();
+      registerAttendance(decodedText);
+      setTimeout(() => {
+        html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
+          html5QrCode.stop();
+          registerAttendance(decodedText);
+        });
+      }, 3000);
+    });
+  </script>
+</body>
+</html>
