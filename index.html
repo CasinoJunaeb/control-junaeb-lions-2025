@@ -41,7 +41,7 @@
   <div id="status" class="status"></div>
 
   <script>
-    const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSdeu9bS4d8IL7YdK1dZhZZQOjHF9QgYoPJU1Pj2uGJtKms7tQ/formResponse";
+    const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfeQJOmDUJH7LbOMWnDRvPFR7ZmnZRE7b3q2ofazX9yT-9eUQ/formResponse";
 
     function showStatus(message, type) {
       const statusDiv = document.getElementById("status");
@@ -63,11 +63,11 @@
       const [_, id, nombre, curso] = match;
 
       const formData = new FormData();
-      formData.append("entry.1823784254", fecha);
-      formData.append("entry.232116003", hora);
-      formData.append("entry.1031051305", id);
-      formData.append("entry.1258643960", nombre);
-      formData.append("entry.1843517454", curso);
+      formData.append("entry.1261391296", fecha);
+      formData.append("entry.1134465032", hora);
+      formData.append("entry.2070655154", id);
+      formData.append("entry.1456140255", nombre);
+      formData.append("entry.963804126", curso);
 
       fetch(formURL, {
         method: "POST",
